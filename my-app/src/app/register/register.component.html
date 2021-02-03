@@ -1,0 +1,114 @@
+<p>register works!</p>
+
+<div class="header">
+  <h2>Register</h2>
+</div>
+
+<form #registerForm="ngForm" (ngSubmit)="saveRegister(registerForm)"> 
+
+
+<div class="form-group" [class.is-invalid]="usernameControl.invalid && usernameControl.touched"
+[class.pass-input]="usernameControl.valid">
+  <div class="input-group">
+    <label for="username" class="control-label">Username</label>
+     <input id="username" type="text" name="username" class="form-control"
+      [(ngModel)]="user.username" #usernameControl="ngModel" pattern="(?=.*[a-z]).{2,}" required>
+    <span class="help-block" *ngIf="usernameControl.invalid && usernameControl.touched">
+      Username must contain minimum of 2 characters
+    </span>
+   </div>
+  </div>
+
+
+  <div class="form-group" [class.has-error]="emailControl.invalid && emailControl.touched"
+  [class.pass-input]="emailControl.valid">
+  <div class="input-group">
+    <label for="email" class="control-label">Email</label>
+    <input id="email" type="email" name="email" class="form-control" 
+        [(ngModel)]="user.email" #emailControl="ngModel" 
+        pattern="^[a-zA-Z0-9_.+-]+@(?:(?:[a-zA-Z0-9-]+\.)?[a-zA-Z]+\.)?(gmail)\.com$" required>
+     <span class="help-block" *ngIf="emailControl.errors?.required && emailControl.touched">
+      Email is required <br>
+    </span>
+    <span class="help-block" *ngIf="emailControl.errors?.pattern && emailControl.touched">
+      Email is invalid 
+    </span>
+  </div>
+</div>
+
+<div ngModelGroup="passwordGroup" 
+    [class.error-passwordGroup]="confirmPassword.touched && confirmPassword.invalid 
+    && !confirmPassword.errors?.required" 
+
+    [class.pass-passwordGroup]="confirmPassword.touched && confirmPassword.valid && password.valid
+    && !confirmPassword.errors?.required && !password.errors?.required" 
+
+    [class.has-error]="confirmPassword.touched && confirmPassword.invalid">
+ 
+<div class="form-group" [class.has-error]="password.invalid && password.touched">
+   <div class="input-group">
+    <label for="password" class="control-label">Password</label>
+      <input type="text" name="password" required class="form-control" [(ngModel)]="user.password"
+             #password="ngModel" id="password" (input)="confirmPassword.control.updateValueAndValidity()"
+             pattern="(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}"
+             appCapCheckValidator appLowerCheckValidator appDigitCheckValidator appCheckMinimumValidator>
+     <span class="help-block" *ngIf="password.touched && password.errors?.required">
+        Password is required
+     </span>
+     <span class="help-block" *ngIf="password.touched && password.errors?.pattern">
+      Password is invalid<br>
+   </span>
+
+     <!-- below is the interactive instructions to satisfy password requirements -->
+  <span class="pass-block" *ngIf="password.touched && password.errors?.notCap">
+      *Password must contain at least one capital letter.
+  </span>
+  <span class="pass-block" *ngIf="password.touched && password.errors?.notLow">
+      *Password must contain at least one lower case letter.
+  </span>
+  <span class="pass-block" *ngIf="password.touched && password.errors?.notDigit">
+      *Password must contain at least one digit.
+  </span>
+  <span class="pass-block" *ngIf="password.touched && password.errors?.notMini">
+      *Password must contain a minimum of 8 characters.
+  </span>
+      <!-- <span class="pass-block" *ngIf="password && password.errors">
+        *Password must contain at least one capital letter<br>
+        *Password must contain at least one lower case letter<br>
+        *Password must contain at least one digit<br>
+        *Password must contain at least 8 charaters
+    </span> -->
+  </div>
+</div>
+ 
+<div class="form-group" [class.has-error]="confirmPassword.touched && confirmPassword.invalid">
+  <div class="input-group" >
+    <label for="confirmPassword" class="control-label">Confirm password</label>
+    <input  type="text" appConfirmEqualValidator="password" name="confirmPassword" required class="form-control"
+      [(ngModel)]="user.confirmPassword" #confirmPassword="ngModel" id="password"
+      pattern="(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}">
+      <span class="help-block" *ngIf="confirmPassword.touched && confirmPassword.errors?.required">
+        Confirm password is required
+      </span>
+      <span class="help-block" *ngIf="confirmPassword.touched && 
+        confirmPassword.errors?.notEqual && !confirmPassword.errors?.required">
+        Password and Confirm Password does not match
+      </span>
+    </div>
+  </div>
+</div>
+  
+
+  <div class="input-group">
+    <button type="submit" class="btn btn-primary" [disabled]="registerForm.invalid">Register</button>
+  </div>
+  <p>
+    Already a member? <a href="login">Sign in</a>
+  </p>
+</form>
+
+{{registerForm.value |json}}
+
+<!-- pattern="(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}"  -->
+<!-- email domain validator pattern 
+  pattern="^[a-zA-Z0-9_.+-]+@(?:(?:[a-zA-Z0-9-]+\.)?[a-zA-Z]+\.)?(gmail)\.com$" -->
